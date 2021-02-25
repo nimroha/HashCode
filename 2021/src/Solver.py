@@ -13,6 +13,7 @@ from itertools import compress
 
 from src.Parser import parseIn, parseOut
 from src.Utils  import savePickle, loadPickle
+from src.naive_amitay import less_naive_amitay
 
 INPUT_DIR = os.path.join(os.path.dirname(__file__), os.pardir, 'inputs')
 
@@ -53,8 +54,9 @@ def parallelSolve(orders, total_books_num, libraries_num, days_num, book_scores,
 
 def prune_long_paths(paths, percentile=95):
     lengths = np.array([len(path) for path in paths])
-    short_paths = list(compress(lengths, lengths < np.percentile(lengths, percentile)))
+    short_paths = list(compress(paths, lengths <= np.percentile(lengths, percentile)))
     return short_paths
+
 
 def solve(inputProblem, cache_bust=False):
     inPath = INPUTS[inputProblem]
@@ -71,9 +73,10 @@ def solve(inputProblem, cache_bust=False):
         savePickle(inPath + '.pkl', (streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus))
 
     print("Solving...")
-    return
-    # TODO solve
+    print(f'{inputProblem}: bonus * num_cars = {bonus * num_cars}')
     t = time()
+    paths = prune_long_paths(paths, percentile=90)
+    result = less_naive_amitay(streets, num_intersections, paths)
     print(f'problem {inputProblem} took {time() - t:.2f}s')
 
     # write solution to file
