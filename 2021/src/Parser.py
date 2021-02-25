@@ -24,13 +24,14 @@ def parseIn(path):
         for i in range(num_cars):
             line = fp.readline().strip().split()
             path_length = int(line[0])
-            paths[i] = line[:1]
+            paths[i] = line[1:]
 
         return streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus
 
 
 def parseOut(path, schedules):
     with open(path, 'w') as fp:
+        schedules = {k: v for k, v in schedules.items() if len(v) > 0}
         fp.write(f'{len(schedules)}\n')
         for intersection, schedule in schedules.items():
             fp.write(f'{intersection}\n')

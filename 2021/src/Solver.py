@@ -51,7 +51,7 @@ def parallelSolve(orders, total_books_num, libraries_num, days_num, book_scores,
 
 
 
-def solve(inputProblem):
+def solve(inputProblem, cache_bust=False):
     inPath = INPUTS[inputProblem]
     outPath = inPath + '_result.txt'
     # personal = ''#'/jona/'
@@ -69,14 +69,10 @@ def solve(inputProblem):
     return
     # TODO solve
     t = time()
-    # result = book_scanning_n(total_books_num, libraries_num, days_num, book_scores, libraries)
-    result = greedy_book_scanning_j(total_books_num, libraries_num, days_num, book_scores, libraries)
-    # print(scorer(result, total_books_num, libraries_num, days_num, book_scores, libraries))
     print(f'problem {inputProblem} took {time() - t:.2f}s')
 
     # write solution to file
     print("Writing solution to file...")
-    # print(f'ordered {np.sum(np.take(pizzas, selected))} of {numSlices} slices')
     parseOut(outPath, result)
 
 
@@ -84,15 +80,16 @@ def main(argv=None):
     parser = argparse.ArgumentParser(description='Solve problem')
     parser.add_argument('-i', '--input', help='Input file id (letter)', default='a', choices=INPUTS.keys())
     parser.add_argument('--loop',        help='run on all inputs',      default=False, action='store_true')
+    parser.add_argument('--cache_bust',  help='rerun parser',           default=False, action='store_true')
     args = parser.parse_args(argv)
 
     inputProblem = args.input
 
     if args.loop:
         for inputProblem in INPUTS.keys():
-            solve(inputProblem)
+            solve(inputProblem, args.cache_bust)
     else:
-        solve(inputProblem)
+        solve(inputProblem, args.cache_bust)
 
     print("Done")
 
