@@ -1,27 +1,36 @@
 import numpy as np
 import pandas as pd
 
+def readAndSplitLine(fp):
+    return [int(x) for x in fp.readline().strip().split()]
+
+
 def parseIn(path):
     with open(path, 'r') as fp:
         # TODO parse into pandas, not dictionary
-        line = np.array([int(x) for x in fp.readline().strip().split()])
-        total_books_num, libraries_num, days_num = (line[i] for i in range(3))
-        book_scores = np.array([int(x) for x in fp.readline().strip().split()])
-        libraries = []
-        for i in range(libraries_num):
-            library = {}
-            line = np.array([int(x) for x in fp.readline().strip().split()])
-            books_num, signup_time, daily_books = (line[k] for k in range(3))
-            library["books_num"] = books_num
-            library["signup_time"] = signup_time
-            library["daily_books"] = daily_books
-            library["book_idxs"] = np.array([int(x) for x in fp.readline().strip().split()])
-            libraries.append(library)
+        num_steps, num_intersections, num_streets, num_cars, bonus = [int(x) for x in fp.readline().strip().split()]
 
-    return total_books_num, libraries_num, days_num, book_scores, libraries
+        streets = {}
+        for i in range(num_streets):
+            line = fp.readline().strip().split()
+            start_i, end_i = int(line[0]), int(line[1])
+            name = line[2]
+            through_time = int(line[3])
+            streets[name] = {'through_time': through_time,
+                             'start':        start_i,
+                             'end':          end_i}
+
+        paths = [None] * num_cars
+        for i in range(num_cars):
+            line = fp.readline().strip().split()
+            path_length = int(line[0])
+            paths[i] = line[:1]
+
+        return streets, paths
 
 
-def parseOut(path, libraries):
+def parseOut(path, schedule):
+
     print(libraries['order'])
     with open(path, 'w') as fp:
         fp.write(f'{len(libraries["order"])}\n')

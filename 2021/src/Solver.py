@@ -13,12 +13,12 @@ from src.Utils  import savePickle, loadPickle
 
 INPUT_DIR = os.path.join(os.path.dirname(__file__), os.pardir, 'inputs')
 
-INPUTS = {'a': os.path.join(INPUT_DIR, 'a_example.txt'),
-          'b': os.path.join(INPUT_DIR, 'b_read_on.txt'),
-          'c': os.path.join(INPUT_DIR, 'c_incunabula.txt'),
-          'd': os.path.join(INPUT_DIR, 'd_tough_choices.txt'),
-          'e': os.path.join(INPUT_DIR, 'e_so_many_books.txt'),
-          'f': os.path.join(INPUT_DIR, 'f_libraries_of_the_world.txt')}
+INPUTS = {'a': os.path.join(INPUT_DIR, 'a.txt'),
+          'b': os.path.join(INPUT_DIR, 'b.txt'),
+          'c': os.path.join(INPUT_DIR, 'c.txt'),
+          'd': os.path.join(INPUT_DIR, 'd.txt'),
+          'e': os.path.join(INPUT_DIR, 'e.txt'),
+          'f': os.path.join(INPUT_DIR, 'f.txt')}
 
 
 from random import seed
