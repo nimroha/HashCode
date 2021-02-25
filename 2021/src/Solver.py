@@ -9,6 +9,7 @@ from random import randint
 
 from sklearn.utils import shuffle
 from time import time
+from itertools import compress
 
 from src.Parser import parseIn, parseOut
 from src.Utils  import savePickle, loadPickle
@@ -50,6 +51,10 @@ def parallelSolve(orders, total_books_num, libraries_num, days_num, book_scores,
     return (bestOrder,) + results[bestIdx]
 
 
+def prune_long_paths(paths, percentile=95):
+    lengths = np.array([len(path) for path in paths])
+    short_paths = list(compress(lengths, lengths < np.percentile(lengths, percentile)))
+    return short_paths
 
 def solve(inputProblem, cache_bust=False):
     inPath = INPUTS[inputProblem]
