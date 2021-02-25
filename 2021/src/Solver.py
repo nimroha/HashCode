@@ -278,18 +278,18 @@ def scorer_g(library_scans, total_books_num, libraries_num, days_num, book_score
     return score
 
 def solve(inputProblem):
-    inPath = os.path.abspath(os.path.join(__file__, INPUTS[inputProblem]))
-    personal = ''#'/jona/'
+    inPath = INPUTS[inputProblem]
     outPath = inPath + '_result.txt'
+    # personal = ''#'/jona/'
     # os.makedirs(outPath + personal, exist_ok=True)
     print(f'Solving {inPath}')
 
     print("Parsing...")
     if os.path.isfile(inPath + '.pkl'):
-        total_books_num, libraries_num, days_num, book_scores, libraries = loadPickle(inPath + '.pkl')
+        streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus = loadPickle(inPath + '.pkl')
     else:
-        total_books_num, libraries_num, days_num, book_scores, libraries = parseIn(inPath)
-        savePickle(inPath + '.pkl', (total_books_num, libraries_num, days_num, book_scores, libraries))
+        streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus = parseIn(inPath)
+        savePickle(inPath + '.pkl', (streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus))
 
     print("Solving...")
     t = time()
