@@ -26,7 +26,7 @@ def loadPickle(loadPath):
     """
     pickle load wrapper
 
-    :param loadPath: peth to load
+    :param loadPath: path to load
 
     :return: python object
     """

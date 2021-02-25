@@ -1,8 +1,13 @@
 import numpy as np
 import pandas as pd
+from dataclasses import dataclass
 
-def readAndSplitLine(fp):
-    return [int(x) for x in fp.readline().strip().split()]
+@dataclass
+class Edge:
+    start: int
+    end: int
+    name: str
+    duration: int
 
 
 def parseIn(path):
@@ -24,7 +29,7 @@ def parseIn(path):
         for i in range(num_cars):
             line = fp.readline().strip().split()
             path_length = int(line[0])
-            paths[i] = line[1:]
+            paths[i] = [Edge(name=name, **streets[name])  for name in line[1:]]
 
         return streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus
 

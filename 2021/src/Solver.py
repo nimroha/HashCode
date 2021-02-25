@@ -59,7 +59,7 @@ def solve(inputProblem, cache_bust=False):
     print(f'Solving {inPath}')
 
     print("Parsing...")
-    if os.path.isfile(inPath + '.pkl'):
+    if os.path.isfile(inPath + '.pkl') and not cache_bust:
         streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus = loadPickle(inPath + '.pkl')
     else:
         streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus = parseIn(inPath)
