@@ -1,7 +1,9 @@
 import numpy as np
+import pandas as pd
 
 def parseIn(path):
     with open(path, 'r') as fp:
+        # TODO parse into pandas, not dictionary
         line = np.array([int(x) for x in fp.readline().strip().split()])
         total_books_num, libraries_num, days_num = (line[i] for i in range(3))
         book_scores = np.array([int(x) for x in fp.readline().strip().split()])
