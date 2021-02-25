@@ -4,6 +4,8 @@ import pickle
 import matplotlib.pyplot as plt
 import numpy as np
 import multiprocessing as mp
+from random import seed
+from random import randint
 
 from sklearn.utils import shuffle
 from time import time
@@ -13,16 +15,9 @@ from src.Utils  import savePickle, loadPickle
 
 INPUT_DIR = os.path.join(os.path.dirname(__file__), os.pardir, 'inputs')
 
-INPUTS = {'a': os.path.join(INPUT_DIR, 'a.txt'),
-          'b': os.path.join(INPUT_DIR, 'b.txt'),
-          'c': os.path.join(INPUT_DIR, 'c.txt'),
-          'd': os.path.join(INPUT_DIR, 'd.txt'),
-          'e': os.path.join(INPUT_DIR, 'e.txt'),
-          'f': os.path.join(INPUT_DIR, 'f.txt')}
+INPUTS = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcdef'}
 
 
-from random import seed
-from random import randint
 # seed random number generator
 seed(time())
 # generate some integers
