@@ -13,11 +13,11 @@ from itertools import compress
 
 from src.Parser import parseIn, parseOut
 from src.Utils  import savePickle, loadPickle
-from src.naive_amitay import less_naive_amitay
+from src.naive_amitay import less_naive_amitay, freq_naive_amitay
 
 INPUT_DIR = os.path.join(os.path.dirname(__file__), os.pardir, 'inputs')
 
-INPUTS = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcdef'}
+INPUTS = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcefd'}
 
 
 # seed random number generator
@@ -58,6 +58,38 @@ def prune_long_paths(paths, percentile=95):
     return short_paths
 
 
+def prune_heavy_paths(paths, percentile=95):
+    lengths = np.array([sum([s.duration for s in path]) for path in paths])
+    short_paths = list(compress(paths, lengths <= np.percentile(lengths, percentile)))
+    return short_paths
+
+def intersection_loads(paths, num_intersections):
+    loads = [0] * num_intersections
+    for path in paths:
+        for edge in path:
+            loads[edge.end] += 1
+
+    return loads
+
+def street_loads(streets, num_streets, paths):
+    street_enumeration = dict()
+    for i, street_name in enumerate(streets.keys()):
+        street_enumeration.update({street_name: i})
+    loads = {}
+    for path in paths:
+        for edge in path:
+            loads[edge.name] = loads.get(edge.name, 0) + 1
+
+    return loads
+
+
+def completion_times(input):
+    streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus = parseIn(INPUTS[input])
+    times = [0] * num_cars
+    for car_idx, path in enumerate(paths):
+        times[car_idx] = sum([e.duration for e in path])
+    return times
+
 def solve(inputProblem, cache_bust=False):
     inPath = INPUTS[inputProblem]
     outPath = inPath + '_result.txt'
@@ -75,8 +107,14 @@ def solve(inputProblem, cache_bust=False):
     print("Solving...")
     print(f'{inputProblem}: bonus * num_cars = {bonus * num_cars}')
     t = time()
-    paths = prune_long_paths(paths, percentile=90)
-    result = less_naive_amitay(streets, num_intersections, paths)
+
+    # paths = prune_heavy_paths(paths, percentile=80)
+    loads = intersection_loads(paths, num_intersections)
+    loads = street_loads(streets, num_streets, paths)
+    thresh = np.percentile([v for v in loads.values()], 90)
+    congested = [k for k, v in loads.items() if v >= thresh]
+    result = less_naive_amitay(streets, num_intersections, paths, congested=congested)
+    # result = freq_naive_amitay(streets, num_intersections, paths)
     print(f'problem {inputProblem} took {time() - t:.2f}s')
 
     # write solution to file
