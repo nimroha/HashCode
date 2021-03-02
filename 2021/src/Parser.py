@@ -3,11 +3,22 @@ import pandas as pd
 from dataclasses import dataclass
 
 @dataclass
-class Edge:
+class Street:
     start: int
     end: int
     name: str
     duration: int
+
+
+@dataclass
+class Data:
+    streets: dict
+    paths: list
+    num_steps: int
+    num_intersections: int
+    num_streets: int
+    num_cars: int
+    bonus: int
 
 
 def parseIn(path):
@@ -29,9 +40,9 @@ def parseIn(path):
         for i in range(num_cars):
             line = fp.readline().strip().split()
             path_length = int(line[0])
-            paths[i] = [Edge(name=name, **streets[name])  for name in line[1:]]
+            paths[i] = [Street(name=name, **streets[name]) for name in line[1:]]
 
-        return streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus
+        return Data(streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus)
 
 
 def parseOut(path, schedules):
@@ -44,5 +55,8 @@ def parseOut(path, schedules):
             for name, duration in schedule:
                 fp.write(f'{name} {duration}\n')
 
-# parseIn('test.txt')
-# parseOut('test.txt', libraries)
+if __name__ == '__main__':
+    example_schedule = {1: [('a', 3), ('b', 2)],
+                        3: [('z', 1), ('e', 3)]}
+    parseIn('example.txt')
+    parseOut('example_result.txt', example_schedule)

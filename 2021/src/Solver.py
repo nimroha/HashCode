@@ -11,39 +11,30 @@ from sklearn.utils import shuffle
 from time import time
 from itertools import compress
 
-from src.Parser import parseIn, parseOut
-from src.Utils  import savePickle, loadPickle
+from src.Parser import parseIn, parseOut, Data
+from src.Utils  import savePickle, loadPickle, validateInputRange
 from src.naive_amitay import less_naive_amitay, freq_naive_amitay
 
-INPUT_DIR = os.path.join(os.path.dirname(__file__), os.pardir, 'inputs')
-
-INPUTS = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcefd'}
-
+INPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'inputs'))
+INPUTS    = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcefd'}
 
 # seed random number generator
 seed(time())
-# generate some integers
 
-
-
-def worker(lib_order, total_books_num, libraries_num, days_num, book_scores, libraries):
-    result = book_scanning_by_order_g(total_books_num, libraries_num, days_num, book_scores, libraries, lib_order)
-    score = scorer_g(result, total_books_num, libraries_num, days_num, book_scores, libraries)
-
-    return score, result
 
 def parallelSolve(orders, total_books_num, libraries_num, days_num, book_scores, libraries):
+    #### SAMPLE PARALLEL CODE ####
     numProcs = len(orders)
     print(f'using {numProcs} cores')
 
     pool = mp.Pool(processes=numProcs)
-    results = [pool.apply_async(func=worker,
+    futures = [pool.apply_async(func=worker,
                                 args=(order.tolist(), total_books_num, libraries_num, days_num, book_scores, libraries),)
                for order in orders]
     pool.close()
     pool.join()
 
-    results = [r.get() for r in results]
+    results = [r.get() for r in futures]
     scores = [p[0] for p in results]
     print(scores)
     bestIdx = np.argmax(scores)
@@ -90,31 +81,30 @@ def completion_times(input):
         times[car_idx] = sum([e.duration for e in path])
     return times
 
+
 def solve(inputProblem, cache_bust=False):
-    inPath = INPUTS[inputProblem]
-    outPath = inPath + '_result.txt'
-    # personal = ''#'/jona/'
-    # os.makedirs(outPath + personal, exist_ok=True)
+    inPath  = INPUTS[inputProblem]
+    outPath = inPath.replace('.txt', '_result.txt')
     print(f'Solving {inPath}')
 
     print("Parsing...")
     if os.path.isfile(inPath + '.pkl') and not cache_bust:
-        streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus = loadPickle(inPath + '.pkl')
+        data = loadPickle(inPath + '.pkl')
     else:
-        streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus = parseIn(inPath)
-        savePickle(inPath + '.pkl', (streets, paths, num_steps, num_intersections, num_streets, num_cars, bonus))
+        data = parseIn(inPath)
+        savePickle(inPath + '.pkl', data)
 
     print("Solving...")
-    print(f'{inputProblem}: bonus * num_cars = {bonus * num_cars}')
+    print(f'{inputProblem}: bonus * num_cars = {data.bonus * data.num_cars}')
     t = time()
 
-    # paths = prune_heavy_paths(paths, percentile=80)
-    loads = intersection_loads(paths, num_intersections)
-    loads = street_loads(streets, num_streets, paths)
+    # data.paths = prune_heavy_paths(data.paths, percentile=80)
+    loads = intersection_loads(data.paths, data.num_intersections)
+    loads = street_loads(data.streets, data.num_streets, data.paths)
     thresh = np.percentile([v for v in loads.values()], 90)
     congested = [k for k, v in loads.items() if v >= thresh]
-    result = less_naive_amitay(streets, num_intersections, paths, congested=congested)
-    # result = freq_naive_amitay(streets, num_intersections, paths)
+    result = less_naive_amitay(data.streets, data.num_intersections, data.paths, congested=congested)
+    # result = freq_naive_amitay(data.streets, data.num_intersections, data.paths)
     print(f'problem {inputProblem} took {time() - t:.2f}s')
 
     # write solution to file
@@ -122,20 +112,18 @@ def solve(inputProblem, cache_bust=False):
     parseOut(outPath, result)
 
 
+
+
+
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Solve problem')
-    parser.add_argument('-i', '--input', help='Input file id (letter)', default='a', choices=INPUTS.keys())
-    parser.add_argument('--loop',        help='run on all inputs',      default=False, action='store_true')
-    parser.add_argument('--cache_bust',  help='rerun parser',           default=False, action='store_true')
+    parser.add_argument('-i', '--input', help='Input file letter(s)', default='a', type=validateInputRange(''.join(INPUTS.keys())))
+    parser.add_argument('--cache_bust',  help='rerun parser',         default=False, action='store_true')
     args = parser.parse_args(argv)
 
-    inputProblem = args.input
-
-    if args.loop:
-        for inputProblem in INPUTS.keys():
-            solve(inputProblem, args.cache_bust)
-    else:
-        solve(inputProblem, args.cache_bust)
+    inputProblems = args.input
+    for problem in inputProblems:
+        solve(problem, args.cache_bust)
 
     print("Done")
 
