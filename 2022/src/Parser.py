@@ -56,3 +56,4 @@ def parseOut(path, plan):
 if __name__ == '__main__':
     test_plan = [('alpha', ['tom', 'brady']), ('beta', ['putin', 'biden'])]
     parseOut('../inputs/test_result.txt', test_plan)
+

@@ -11,8 +11,8 @@ from sklearn.utils import shuffle
 from time import time, sleep
 from itertools import compress
 
-from src.Parser import parseIn, parseOut, Data
-from src.Utils  import savePickle, loadPickle, validateInputRange
+from Parser import parseIn, parseOut, Data
+from Utils  import savePickle, loadPickle, validateInputRange
 
 import guy
 import jonathan
