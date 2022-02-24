@@ -14,6 +14,12 @@ from itertools import compress
 from src.Parser import parseIn, parseOut, Data
 from src.Utils  import savePickle, loadPickle, validateInputRange
 
+import guy
+import jonathan
+import nimrod
+import yair
+import amitay
+
 
 INPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'inputs'))
 INPUTS    = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcefd'}
