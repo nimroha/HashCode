@@ -1,25 +1,5 @@
 import numpy as np
 import pandas as pd
-from dataclasses import dataclass
-
-@dataclass
-class Street:
-    start: int
-    end: int
-    name: str
-    duration: int
-
-
-@dataclass
-class Data:
-    streets: dict
-    paths: list
-    num_steps: int
-    num_intersections: int
-    num_streets: int
-    num_cars: int
-    bonus: int
-
 
 def parseIn(path):
     with open(path, 'r') as fp:

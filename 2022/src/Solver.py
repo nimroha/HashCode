@@ -11,7 +11,7 @@ from sklearn.utils import shuffle
 from time import time, sleep
 from itertools import compress
 
-from Parser import parseIn, parseOut, Data
+from Parser import parseIn, parseOut
 from Utils  import savePickle, loadPickle, validateInputRange
 
 import guy
@@ -56,24 +56,18 @@ def parallelSolve():
 
 def solve(inputProblem, cache_bust=False):
     inPath  = INPUTS[inputProblem]
-    outPath = inPath.replace('.txt', '_result.txt')
+    dir_name, file_name = os.path.split(inPath)
+    outPath = os.path.join(dir_name, f'result_{file_name}')
     print(f'Solving {inPath}')
 
     print("Parsing...")
-    # if os.path.isfile(inPath + '.pkl') and not cache_bust:
-    #     data = loadPickle(inPath + '.pkl')
-    # else:
-    #     data = parseIn(inPath)
-    #     savePickle(inPath + '.pkl', data)
-
-    data = parseIn(inPath)
-    people, projects, all_skills = data
+    people, projects, all_skills = parseIn(inPath)
 
     print("Solving...")
     t = time()
 
     # TODO solve
-    plan = []
+    plan = amitay.solve(people,projects)
 
     print(f'problem {inputProblem} took {time() - t:.2f}s')
 
