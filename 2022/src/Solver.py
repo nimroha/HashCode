@@ -60,12 +60,13 @@ def solve(inputProblem, cache_bust=False):
     print(f'Solving {inPath}')
 
     print("Parsing...")
-    if os.path.isfile(inPath + '.pkl') and not cache_bust:
-        data = loadPickle(inPath + '.pkl')
-    else:
-        data = parseIn(inPath)
-        savePickle(inPath + '.pkl', data)
+    # if os.path.isfile(inPath + '.pkl') and not cache_bust:
+    #     data = loadPickle(inPath + '.pkl')
+    # else:
+    #     data = parseIn(inPath)
+    #     savePickle(inPath + '.pkl', data)
 
+    data = parseIn(inPath)
     people, projects, all_skills = data
 
     print("Solving...")
