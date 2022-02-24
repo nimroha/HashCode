@@ -58,5 +58,5 @@ def parseOut(path, schedules):
 if __name__ == '__main__':
     example_schedule = {1: [('a', 3), ('b', 2)],
                         3: [('z', 1), ('e', 3)]}
-    parseIn('example.txt')
-    parseOut('example_result.txt', example_schedule)
+    parseIn('inputs/example.txt')
+    parseOut('inputs/example_result.txt', example_schedule)

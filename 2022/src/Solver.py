@@ -21,18 +21,20 @@ INPUTS    = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcefd'}
 # seed random number generator
 seed(time())
 
-def example_worker():
-    print(f'worker {os.getpid()}')
+def example_worker(*args):
+    print(f'worker {os.getpid()} got {args}')
     sleep(1)
+    return randint(0, 100)
 
-def parallelSolve(orders, total_books_num, libraries_num, days_num, book_scores, libraries):
+def parallelSolve():
     #### SAMPLE PARALLEL CODE ####
-    numProcs = len(orders)
+    orders = list(range(10))
+    numProcs = min(len(orders), os.cpu_count() * 2)
     print(f'using {numProcs} cores')
 
     with mp.Pool(processes=numProcs) as pool:
         futures = [pool.apply_async(func=example_worker,
-                                    args=(order.tolist(), total_books_num, libraries_num, days_num, book_scores, libraries),)
+                                    args=(order,))
                    for order in orders]
 
         results = [r.get() for r in futures]
@@ -72,8 +74,6 @@ def solve(inputProblem, cache_bust=False):
 
 
 
-
-
 def main(argv=None):
     parser = argparse.ArgumentParser(description='Solve problem')
     parser.add_argument('-i', '--input', help='Input file letter(s)', default='a', type=validateInputRange(''.join(INPUTS.keys())))
@@ -85,7 +85,6 @@ def main(argv=None):
         solve(problem, args.cache_bust)
 
     print("Done")
-
 
 
 
