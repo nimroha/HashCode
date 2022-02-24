@@ -56,4 +56,6 @@ def parseOut(path, plan):
 if __name__ == '__main__':
     test_plan = [('alpha', ['tom', 'brady']), ('beta', ['putin', 'biden'])]
     parseOut('../inputs/test_result.txt', test_plan)
+    optimal_example = [('WebServer', ['Bob', 'Anna']), ('Logging', ['Anna']), ('WebChat', ['Maria', 'Bob'])]
+    parseOut('../inputs/a_an_example_result.txt', optimal_example)
 
