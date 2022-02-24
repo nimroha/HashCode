@@ -37,9 +37,9 @@ def parseIn(path):
             project_name, num_days, score, best_before, num_roles = fp.readline().strip().split()
             needed_skills = [fp.readline().strip().split() for _ in range(int(num_roles))]  # (skill_name, min_skill_level)
 
-            projects[project_name] = {'num_days':    num_days,
-                                      'best_before': best_before,
-                                      'score':       score,
+            projects[project_name] = {'num_days':    int(num_days),
+                                      'best_before': int(best_before),
+                                      'score':       int(score),
                                       'skills':      [(s[0], int(s[1])) for s in needed_skills]}
 
 
