@@ -69,17 +69,16 @@ def solve(inputProblem, cache_bust=False):
     people, projects, all_skills = data
 
     print("Solving...")
-    print(f'{inputProblem}: bonus * num_cars = {data.bonus * data.num_cars}')
     t = time()
 
     # TODO solve
-    result = None
+    plan = []
 
     print(f'problem {inputProblem} took {time() - t:.2f}s')
 
     # write solution to file
     print("Writing solution to file...")
-    parseOut(outPath, result)
+    parseOut(outPath, plan)
 
 
 
