@@ -21,8 +21,9 @@ import yair
 import amitay
 
 
-INPUT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'inputs'))
-INPUTS    = {k: os.path.join(INPUT_DIR, f'{k}.txt') for k in 'abcefd'}
+INPUT_DIR   = os.path.abspath(os.path.join(os.path.dirname(__file__), os.pardir, 'inputs'))
+INPUT_FILES = os.listdir(INPUT_DIR)
+INPUTS      = {f[0]: os.path.join(INPUT_DIR, f) for f in INPUT_FILES}
 
 # seed random number generator
 seed(time())
@@ -64,6 +65,8 @@ def solve(inputProblem, cache_bust=False):
     else:
         data = parseIn(inPath)
         savePickle(inPath + '.pkl', data)
+
+    people, projects, all_skills = data
 
     print("Solving...")
     print(f'{inputProblem}: bonus * num_cars = {data.bonus * data.num_cars}')
