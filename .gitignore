@@ -111,4 +111,4 @@ venv.bak/
 
 
 # result files
-*_result.txt
+*result*

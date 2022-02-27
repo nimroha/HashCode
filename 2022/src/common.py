@@ -22,3 +22,10 @@ def levelup(project, members, people):
                 people[member][skill] = member_level + 1
 
 
+if __name__ == '__main__':
+    people = {'a': {'foo': 1, 'bar': 2},
+              'b': {'foo': 2}}
+    projects = {'alpha': {'skills': [('foo', 2), ('foo', 5)]}}
+    print(people)
+    # mentor_levelup(projects['alpha'], ['b', 'a'], people)
+    print(people)
